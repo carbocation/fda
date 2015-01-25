@@ -208,13 +208,13 @@ type Patient struct {
 		DateFormat string `json:"patientdeathdateformat"`
 	} `json:"patientdeath"`
 
-	Reactions []Reaction `json:"reaction"`
-	Drugs     []Drug     `json:"drug"`
+	Reactions []DrugReaction `json:"reaction"`
+	Drugs     []Drug         `json:"drug"`
 }
 
-// Reaction represents the reaction that caused the SafetyReport to be filed,
-// and the outcome of the event
-type Reaction struct {
+// DrugReaction represents the reaction that caused the DrugSafetyReport to be filed
+// for a particular Patient, as well as the outcome of the event
+type DrugReaction struct {
 	MedDRA        string `json:"reactionmeddrapt"`
 	MedDRAVersion string `json:"reactionmeddraversionpt"`
 	Outcome       string `json:"reactionoutcome"`
