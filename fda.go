@@ -38,7 +38,7 @@ type Client struct {
 	// User Agent used when communicating with the API
 	UserAgent string
 
-	// Until Partners implements OAuth
+	// May be left blank, but requests permitted per hour dramatically higher w/valid key.
 	APIKey string
 
 	// Accept responses of this type. Defaults to JSON. Currently FDA only supports JSON.
@@ -129,7 +129,7 @@ func (c *Client) Do(req *http.Request, v interface{}) (*Response, error) {
 	return r, err
 }
 
-// Reponse resembles the returned packets
+// Reponse resembles the data returned by the API
 type Response struct {
 	HTTPResponse *http.Response
 	Response     interface{}
@@ -137,9 +137,9 @@ type Response struct {
 	Results      interface{}
 }
 
-// Meta represents information about the response. If all goes well,
-// only a Code key with value 200 will present. However, sometimes things
-// go wrong, and in that case ErrorType and ErrorMessage are present.
+// Meta represents information about the response. The Disclaimer and License
+// appear to be boilerplate, but the Pagination data will be useful
+// to assist in iterating over a dataset which contains greater than 100 items.
 type Meta struct {
 	Disclaimer  string
 	License     string
@@ -147,13 +147,17 @@ type Meta struct {
 	Pagination  Pagination `json:"results"`
 }
 
+// Pagination contains information about the returned data, including how many
+// records were skipped (Skip), how many records were included (Limit), and
+// how many total records exist (Total).
 type Pagination struct {
 	Skip  int
 	Limit int
 	Total int
 }
 
-// ErrorResponse represents a Response which contains an error
+// ErrorResponse represents a Response which contains an error and which
+// satisfies the Error type
 type ErrorResponse struct {
 	HTTPResponse *http.Response
 	Err          struct {
@@ -170,7 +174,7 @@ func (r *ErrorResponse) Error() string {
 }
 
 // CheckResponse checks the API response for error, and returns it
-// if present. A response is considered an error if it has non StatusOK
+// if present. A response is considered an error if it has non-http.StatusOK
 // code.
 func CheckResponse(r *http.Response) error {
 	if r.StatusCode == http.StatusOK {

@@ -13,8 +13,7 @@ type DrugService struct {
 
 // EventSearch finds events that have been reported while a patient is on medications.
 // It yields a slice of SafetyReport, which is a structured response providing information
-// about the event. Subjectively, while there are many fields in each SafetyReport, often
-// the majority of fields are left empty.
+// about the event.
 func (s *DrugService) EventSearch(search string, limit, skip int) ([]SafetyReport, *Meta, error) {
 	data := []SafetyReport{}
 
