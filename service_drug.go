@@ -36,3 +36,27 @@ func (s *DrugService) EventSearch(search string, limit, skip int) ([]SafetyRepor
 
 	return data, resp.Meta, nil
 }
+
+// LabelSearch finds drug labels, which is manufacturer-created information
+func (s *DrugService) LabelSearch(search string, limit, skip int) ([]DrugLabel, *Meta, error) {
+	data := []DrugLabel{}
+
+	params := url.Values{}
+	params.Add("limit", strconv.Itoa(limit))
+	params.Add("skip", strconv.Itoa(skip))
+	if search != "" {
+		params.Add("search", search)
+	}
+
+	req, err := s.client.NewRequest("/drug/label", params, "")
+	if err != nil {
+		return data, &Meta{}, err
+	}
+
+	resp, err := s.client.Do(req, &data)
+	if err != nil {
+		return data, &Meta{}, fmt.Errorf("LabelSearch:err: %s", err)
+	}
+
+	return data, resp.Meta, nil
+}

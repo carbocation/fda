@@ -99,6 +99,82 @@ type Drug struct {
 	OpenFDA                    OpenFDA `json:"openfda"`
 }
 
+// A DrugLabel is labeling information for a medication, including
+// OTC and prescription medications. SetID, ID, Version, and EffectiveTime
+// are supposed to be guaranteed to be present, while other fields are optional.
+type DrugLabel struct {
+	SetID         string `json:"set_id"`
+	ID            string `json:"id"`
+	Version       string `json:"version"`
+	EffectiveTime string `json:"effective_time"`
+
+	AbuseAndDependence           []string `json:"drug_abuse_and_dependence"`
+	ControlledSubstance          []string `json:"controlled_substance"`
+	Abuse                        []string `json:"abuse"`
+	Dependence                   []string `json:"dependence"`
+	Overdosage                   []string `json:"overdosage"`
+	AdverseReactions             []string `json:"adverse_reactions"`
+	DrugInteractions             []string `json:"drug_interactions"`
+	LaboratoryInterference       []string `json:"drug_and_or_laboratory_test_interactions"`
+	ClinicalPharmacology         []string `json:"clinical_pharmacology"`
+	MechanismOfAction            []string `json:"mechanism_of_action"`
+	Pharmacodynamics             []string `json:"pharmacodynamics"`
+	Pharmacokinetics             []string `json:"pharmacokinetics"`
+	IndicationsAndUsage          []string `json:"indications_and_usage"`
+	Contraindications            []string `json:"contraindications"`
+	DosageAndAdministration      []string `json:"dosage_and_administration"`
+	DosageFormsAndStrengths      []string `json:"dosage_forms_and_strengths"`
+	Purpose                      []string `json:"purpose"`
+	Description                  []string `json:"description"`
+	ActiveIngredient             []string `json:"active_ingredient"`
+	InactiveIngredient           []string `json:"inactive_ingredient"`
+	ProductIngredients           []string `json:"spl_product_data_elements"`
+	PackageInsert                []string `json:"spl_patient_package_insert"`
+	InformationForPatients       []string `json:"information_for_patients"`
+	InformationForCaregivers     []string `json:"information_for_owners_or_caregivers"`
+	InstructionsForUse           []string `json:"instructions_for_use"`
+	WhenToAskADoctor             []string `json:"ask_doctor"`
+	WhenToAskADoctorOrPharmacist []string `json:"ask_doctor_or_pharmacist"`
+	AbsoluteContraindications    []string `json:"do_not_use"`
+	InformationRegardingChildren []string `json:"keep_out_of_reach_of_children"`
+	OtherSafetyInformation       []string `json:"other_safety_information"`
+	TelephoneNumberForQuestions  []string `json:"questions"`
+	WhenToDiscontinueImmediately []string `json:"stop_use"`
+	SideEffectsAndWhatToAvoid    []string `json:"when_using"`
+	PatientMedicationGuide       []string `json:"patient_medication_information"`
+	MedicationGuide              []string `json:"spl_medguide"`
+	SpecificPopulations          []string `json:"use_in_specific_populations"`
+	EffectsOnPregnancy           []string `json:"pregnancy"`
+	TeratogenicEffects           []string `json:"teratogenic_effects"`
+	NonteratogenicEffects        []string `json:"nonteratogenic_effects"`
+	LaborAndDelivery             []string `json:"labor_and_delivery"`
+	NursingMothers               []string `json:"nursing_mothers"`
+	PregnancyOrBreastfeeding     []string `json:"pregnancy_or_breast_feeding"`
+	PediatricUse                 []string `json:"pediatric_use"`
+	GeriatricUse                 []string `json:"geriatric_use"`
+	NonclinicalToxicology        []string `json:"nonclinical_toxicology"`
+	Carcinogenesis               []string `json:"carcinogenesis_and_mutagenesis_and_impairment_of_fertility"`
+	AnimalPharmacology           []string `json:"animal_pharmacology_and_or_toxicology"`
+	ClinicalStudies              []string `json:"clinical_studies"`
+	References                   []string `json:"references"`
+	HowSupplied                  []string `json:"how_supplied"`
+	StorageAndHandling           []string `json:"storage_and_handling"`
+	SafeHandlingWarning          []string `json:"safe_handling_warning"`
+	BoxedWarning                 []string `json:"boxed_warning"`
+	WarningsAndPrecautions       []string `json:"warnings_and_precautions"`
+	UserSafetyWarnings           []string `json:"user_safety_warnings"`
+	Precautions                  []string `json:"precautions"`
+	Warnings                     []string `json:"warnings"`
+	GeneralPrecautions           []string `json:"general_precautions"`
+	LaboratoryTests              []string `json:"laboratory_tests"`
+	RecentMajorChanges           []string `json:"recent_major_changes"`
+	Microbiology                 []string `json:"microbiology"`
+	PrincipalDisplayPanel        []string `json:"package_label_principal_display_panel"`
+	UnclassifiedSection          []string `json:"spl_unclassified_section"`
+
+	OpenFDA OpenFDA `json:"openfda"`
+}
+
 // OpenFDA reflects OpenFDA-enhanced fields. These are not guaranteed
 // to be present due to a variety of reasons (typos in the original
 // safety report, etc.)
