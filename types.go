@@ -1,5 +1,8 @@
 package fda
 
+// A SafetyReport is one report filed regarding one individual who is on
+// one or more medications. Subjectively, while there are many fields in
+// each SafetyReport, often the majority of fields are left empty.
 type SafetyReport struct {
 	ID                               string  `json:"safetyreportid"`
 	FulfillExpediteCriteria          string  `json:"fulfillexpeditecriteria"`
@@ -42,6 +45,8 @@ type SafetyReport struct {
 	Patient Patient
 }
 
+// A Patient is a representation of the individual in the SafetyReport.
+// Many of these fields are often left blank.
 type Patient struct {
 	Age     string `json:"patientonsetage"`
 	AgeUnit string `json:"patientonsetageunit"`
@@ -56,12 +61,16 @@ type Patient struct {
 	Drugs     []Drug     `json:"drug"`
 }
 
+// Reaction represents the reaction that caused the SafetyReport to be filed,
+// and the outcome of the event
 type Reaction struct {
 	MedDRA        string `json:"reactionmeddrapt"`
 	MedDRAVersion string `json:"reactionmeddraversionpt"`
 	Outcome       string `json:"reactionoutcome"`
 }
 
+// Drug provides information on a drug reported in a SafetyReport.
+// Many of these fields are often left blank.
 type Drug struct {
 	ActionDrug                 string  `json:"actiondrug"`
 	Additional                 string  `json:"drugadditional"`
@@ -90,4 +99,6 @@ type Drug struct {
 	OpenFDA                    OpenFDA `json:"openfda"`
 }
 
+// OpenFDA reflects OpenFDA-enhanced fields
+// TODO(carbocation): Turn this into a proper struct instead of a map[string]interface{}
 type OpenFDA map[string]interface{}

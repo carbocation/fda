@@ -1,6 +1,13 @@
 /*
-Please see https://open.fda.gov/api/reference/#query-syntax for how
-queries should be structured
+Package FDA implements Golang bindings for the OpenFDA API.
+
+Copyright and license is described in LICENSE within this package.
+
+To get an API key, which permits many more requests per hour than with
+unauthenticated API use, please see https://open.fda.gov/api/reference/#authentication
+
+To learn how to craft optimal queries for this API, please see
+https://open.fda.gov/api/reference/#query-syntax
 */
 package fda
 
