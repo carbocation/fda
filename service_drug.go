@@ -10,7 +10,7 @@ type DrugService struct {
 	client *Client
 }
 
-func (s *DrugService) EventSearch(search string, limit, skip int) ([]SafetyReport, error) {
+func (s *DrugService) EventSearch(search string, limit, skip int) ([]SafetyReport, *Meta, error) {
 	data := []SafetyReport{}
 
 	params := url.Values{}
@@ -22,13 +22,13 @@ func (s *DrugService) EventSearch(search string, limit, skip int) ([]SafetyRepor
 
 	req, err := s.client.NewRequest("/drug/event", params, "")
 	if err != nil {
-		return data, err
+		return data, &Meta{}, err
 	}
 
-	_, err = s.client.Do(req, &data)
+	resp, err := s.client.Do(req, &data)
 	if err != nil {
-		return data, fmt.Errorf("EventSearch:err: %s", err)
+		return data, &Meta{}, fmt.Errorf("EventSearch:err: %s", err)
 	}
 
-	return data, nil
+	return data, resp.Meta, nil
 }

@@ -41,9 +41,6 @@ type Client struct {
 	Drug   *DrugService
 	Device *DeviceService
 	Food   *FoodService
-
-	// Temporary Response
-	Response *Response
 }
 
 // NewClient returns a new API client. if a nil httpClient is
@@ -55,10 +52,11 @@ func NewClient(httpClient *http.Client, apikey string) *Client {
 	baseURL, _ := url.Parse(BaseURL)
 
 	c := &Client{
-		client:    httpClient,
-		BaseURL:   baseURL,
-		UserAgent: UserAgent,
-		APIKey:    apikey,
+		client:       httpClient,
+		BaseURL:      baseURL,
+		UserAgent:    UserAgent,
+		APIKey:       apikey,
+		ResponseType: `.json`, //Since JSON is the only supported output for now, in this version it is not user-configurable
 	}
 
 	c.Drug = &DrugService{client: c}
@@ -75,7 +73,7 @@ func (c *Client) NewRequest(endpoint string, params url.Values, body string) (*h
 		params.Add("api_key", c.APIKey)
 	}
 
-	rel, err := url.Parse(endpoint + "?" + params.Encode())
+	rel, err := url.Parse(fmt.Sprint(endpoint, c.ResponseType, "?", params.Encode()))
 	if err != nil {
 		return nil, err
 	}
@@ -96,7 +94,7 @@ func (c *Client) NewRequest(endpoint string, params url.Values, body string) (*h
 // Do sends an API request and returns the API response. The API response is
 // decoded and stored in the value pointed to by v, or returned as an error if
 // an API error has occurred.
-func (c *Client) Do(req *http.Request, v interface{}) (*http.Response, error) {
+func (c *Client) Do(req *http.Request, v interface{}) (*Response, error) {
 	resp, err := c.client.Do(req)
 	if err != nil {
 		return nil, err
@@ -106,7 +104,7 @@ func (c *Client) Do(req *http.Request, v interface{}) (*http.Response, error) {
 
 	err = CheckResponse(resp)
 	if err != nil {
-		return resp, err
+		return nil, err
 	}
 
 	//For debugging
@@ -120,9 +118,8 @@ func (c *Client) Do(req *http.Request, v interface{}) (*http.Response, error) {
 		r.Results = v
 		// Decode the JSON into r.Data (which is our argument)
 		err = json.NewDecoder(resp.Body).Decode(r)
-		c.Response = r
 	}
-	return resp, err
+	return r, err
 }
 
 // Reponse resembles the returned packets
@@ -139,12 +136,14 @@ type Response struct {
 type Meta struct {
 	Disclaimer  string
 	License     string
-	LastUpdated string `json:"last_updated"`
-	Results     struct {
-		Skip  int
-		Limit int
-		Total int
-	}
+	LastUpdated string     `json:"last_updated"`
+	Pagination  Pagination `json:"results"`
+}
+
+type Pagination struct {
+	Skip  int
+	Limit int
+	Total int
 }
 
 // ErrorResponse represents a Response which contains an error
