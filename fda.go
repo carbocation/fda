@@ -17,6 +17,7 @@ import (
 	"fmt"
 	"net/http"
 	"net/url"
+	"strconv"
 )
 
 const (
@@ -127,6 +128,30 @@ func (c *Client) Do(req *http.Request, v interface{}) (*Response, error) {
 		err = json.NewDecoder(resp.Body).Decode(r)
 	}
 	return r, err
+}
+
+// search implements a generic search function that is broadly applicable to all OpenFDA Search endpoints
+// but which may not cover all search use-cases. It is a convenience function to reduce code duplication
+// for generic search services.
+func (c *Client) search(endpoint, search string, limit, skip int, data interface{}) (*Meta, error) {
+	params := url.Values{}
+	params.Add("limit", strconv.Itoa(limit))
+	params.Add("skip", strconv.Itoa(skip))
+	if search != "" {
+		params.Add("search", search)
+	}
+
+	req, err := c.NewRequest(endpoint, params, "")
+	if err != nil {
+		return &Meta{}, err
+	}
+
+	resp, err := c.Do(req, &data)
+	if err != nil {
+		return &Meta{}, fmt.Errorf("Search:err: %s", err)
+	}
+
+	return resp.Meta, nil
 }
 
 // Reponse resembles the data returned by the API
