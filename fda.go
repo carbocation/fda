@@ -102,7 +102,7 @@ func (c *Client) NewRequest(endpoint string, params url.Values, body string) (*h
 // Do sends an API request and returns the API response. The API response is
 // decoded and stored in the value pointed to by v, or returned as an error if
 // an API error has occurred.
-func (c *Client) Do(req *http.Request, v interface{}) (*Response, error) {
+func (c *Client) Do(req *http.Request, v interface{}) (*response, error) {
 	resp, err := c.client.Do(req)
 	if err != nil {
 		return nil, err
@@ -110,7 +110,7 @@ func (c *Client) Do(req *http.Request, v interface{}) (*Response, error) {
 
 	defer resp.Body.Close()
 
-	err = CheckResponse(resp)
+	err = checkResponse(resp)
 	if err != nil {
 		return nil, err
 	}
@@ -120,7 +120,7 @@ func (c *Client) Do(req *http.Request, v interface{}) (*Response, error) {
 	//buffer.ReadFrom(resp.Body)
 	//fmt.Println(buffer.String())
 
-	r := &Response{HTTPResponse: resp}
+	r := &response{HTTPResponse: resp}
 	if v != nil {
 		// Our passed argument is now the value of r.Response
 		r.Results = v
@@ -155,7 +155,7 @@ func (c *Client) search(endpoint, search string, limit, skip int, data interface
 }
 
 // Reponse resembles the data returned by the API
-type Response struct {
+type response struct {
 	HTTPResponse *http.Response
 	Response     interface{}
 	Meta         *Meta
@@ -198,10 +198,10 @@ func (r *ErrorResponse) Error() string {
 		r.Err.StatusCode, r.Err.Code, r.Err.Message)
 }
 
-// CheckResponse checks the API response for error, and returns it
+// checkResponse checks the API response for error, and returns it
 // if present. A response is considered an error if it has non-http.StatusOK
 // code.
-func CheckResponse(r *http.Response) error {
+func checkResponse(r *http.Response) error {
 	if r.StatusCode == http.StatusOK {
 		return nil
 	}
