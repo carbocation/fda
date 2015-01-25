@@ -1,5 +1,30 @@
 package fda
 
+// An EnforcementReport contains information about an enforcement action
+// taken by the FDA
+type EnforcementReport struct {
+	ReportDate              string `json:"report_date"`
+	RecallInitiationDate    string `json:"recall_initiation_date"`
+	RecallNumber            string `json:"recall_number"`
+	ReasonForRecall         string `json:"reason_for_recall"`
+	Status                  string `json:"status"`
+	Classification          string `json:"classification"`
+	ProductType             string `json:"product_type"`
+	ProductDescription      string `json:"product_description"`
+	ProductQuantity         string `json:"product_quantity"`
+	InitialFirmNotification string `json:"initial_firm_notification"`
+	DistributionPattern     string `json:"distribution_pattern"`
+	Country                 string `json:"country"`
+	State                   string `json:"state"`
+	City                    string `json:"city"`
+	EventID                 string `json:"event_id"`
+	RecallingFirm           string `json:"recalling_firm"`
+	Voluntary               string `json:"voluntary_mandated"`
+	CodeInfo                string `json:"code_info"`
+
+	OpenFDA OpenFDA
+}
+
 // A SafetyReport is one report filed regarding one individual who is on
 // one or more medications. Subjectively, while there are many fields in
 // each SafetyReport, often the majority of fields are left empty.
