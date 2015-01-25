@@ -1,5 +1,131 @@
 package fda
 
+// A DeviceSafetyReport reflects a report filed about one or more devices
+type DeviceSafetyReport struct {
+	AdverseEvent                 string `json:"adverse_event_flag"`
+	ProductProblem               string `json:"product_problem_flag"`
+	EventDate                    string `json:"date_of_event"`
+	DateReport                   string `json:"date_report"`
+	ReportReceivedDate           string `json:"date_received"`
+	NumberOfDevices              string `json:"number_devices_in_event"`
+	NumberOfPatients             string `json:"number_patients_in_event"`
+	ReportNumber                 string `json:"report_number"`
+	ReportSourceCode             string `json:"report_source_code"`
+	ReportedByHealthProfessional string `json:"health_professional"`
+	ReporterOccupationCode       string `json:"reporter_occupation_code"`
+	WasInitialReportToFDA        string `json:"initial_report_to_fda"`
+	DeviceWasReused              string `json:"reprocessed_and_reused_flag"`
+
+	Devices  []Device `json:"device"`
+	Patients []struct {
+		SequenceNumber string   `json:"patient_sequence_number"`
+		ReceivedDate   string   `json:"date_received"`
+		Treatment      string   `json:"sequence_number_treatment"`
+		Outcomes       []string `json:"sequence_number_outcome"`
+	} `json:"patient"`
+	Reports []struct {
+		SequenceNumber string `json:"patient_sequence_number"`
+		Description    string `json:"text_type_code"`
+		Text           string `json:"text"`
+		TextKey        string `json:"mdr_text_key"`
+		ReceivedDate   string `json:"date_received"`
+	} `json:"mdr_text"`
+
+	ReportTypes                           []string `json:"type_of_report"`
+	FacilityAwareDate                     string   `json:"date_facility_aware"`
+	ReportDate                            string   `json:"report_date"`
+	ReportedToFDA                         string   `json:"report_to_fda"`
+	ReportedToFDADate                     string   `json:"date_report_to_fda"`
+	ReportedToManufacturer                string   `json:"report_to_manufacturer"`
+	ReportedToManufacturerDate            string   `json:"date_report_to_manufacturer"`
+	EventLocation                         string   `json:"event_location"`
+	DistributorName                       string   `json:"distributor_name"`
+	DistributorAddress1                   string   `json:"distributor_address_1"`
+	DistributorAddress2                   string   `json:"distributor_address_2"`
+	DistributorCity                       string   `json:"distributor_city"`
+	DistributorState                      string   `json:"distributor_state"`
+	DistributorZip                        string   `json:"distributor_zip_code"`
+	DistributorZipExt                     string   `json:"distributor_zip_code_ext"`
+	ManufacturerName                      string   `json:"manufacturer_name"`
+	ManufacturerAddress1                  string   `json:"manufacturer_address_1"`
+	ManufacturerAddress2                  string   `json:"manufacturer_address_2"`
+	ManufacturerCity                      string   `json:"manufacturer_city"`
+	ManufacturerState                     string   `json:"manufacturer_state"`
+	ManufacturerZip                       string   `json:"manufacturer_zip_code"`
+	ManufacturerZipExt                    string   `json:"manufacturer_zip_code_ext"`
+	ManufacturerCountry                   string   `json:"manufacturer_country"`
+	ManufacturerPostalCode                string   `json:"manufacturer_postal_code"`
+	EventTypes                            string   `json:"event_type"`
+	ManufactureDate                       string   `json:"device_date_of_manufacture"`
+	SingleUse                             string   `json:"single_use_flag"`
+	PreviousUse                           string   `json:"previous_use_code"`
+	RemedialActions                       []string `json:"remedial_action"`
+	RemovalCorrectionNumber               string   `json:"removal_correction_number"`
+	ManufacturerContactTitle              string   `json:"manufacturer_contact_t_name"`
+	ManufacturerContactFirstName          string   `json:"manufacturer_contact_f_name"`
+	ManufacturerContactLastName           string   `json:"manufacturer_contact_l_name"`
+	ManufacturerContactStreet1            string   `json:"manufacturer_contact_street_1"`
+	ManufacturerContactStreet2            string   `json:"manufacturer_contact_street_2"`
+	ManufacturerContactCity               string   `json:"manufacturer_contact_city"`
+	ManufacturerContactState              string   `json:"manufacturer_contact_state"`
+	ManufacturerContactZip                string   `json:"manufacturer_contact_zip_code"`
+	ManufacturerContactZipExt             string   `json:"manufacturer_contact_zip_ext"`
+	ManufacturerContactPostal             string   `json:"manufacturer_contact_postal"`
+	ManufacturerContactCountry            string   `json:"manufacturer_contact_country"`
+	ManufacturerContactPhoneCountry       string   `json:"manufacturer_contact_pcountry"`
+	ManufacturerContactPhoneAreaCode      string   `json:"manufacturer_contact_area_code"`
+	ManufacturerContactPhoneExchange      string   `json:"manufacturer_contact_exchange"`
+	ManufacturerContactPhoneExtension     string   `json:"manufacturer_contact_extension"`
+	ManufacturerContactPhoneCity          string   `json:"manufacturer_contact_pcity"`
+	ManufacturerContactPhoneContactNumber string   `json:"manufacturer_contact_phone_number"`
+	ManufacturerContactPhoneLocal         string   `json:"manufacturer_contact_plocal"`
+	ManufacturerG1Name                    string   `json:"manufacturer_g1_name"`
+	ManufacturerG1Street1                 string   `json:"manufacturer_g1_street_1"`
+	ManufacturerG1Street2                 string   `json:"manufacturer_g1_street_2"`
+	ManufacturerG1City                    string   `json:"manufacturer_g1_city"`
+	ManufacturerG1State                   string   `json:"manufacturer_g1_state"`
+	ManufacturerG1Zip                     string   `json:"manufacturer_g1_zip_code"`
+	ManufacturerG1ZipExt                  string   `json:"manufacturer_g1_zip_ext"`
+	ManufacturerG1Postal                  string   `json:"manufacturer_g1_postal_code"`
+	ManufacturerG1Country                 string   `json:"manufacturer_g1_country"`
+	ManufacturerG1ManufacturerReceived    string   `json:"date_manufacturer_received"`
+	SourceTypes                           []string `json:"source_type"`
+	EventKey                              string   `json:"event_key"`
+	MDRReportKey                          string   `json:"mdr_report_key"`
+	LinkFlag                              string   `json:"manufacturer_link_flag_"`
+}
+
+// A Device is a specific device mention in a DeviceSafetyReport
+type Device struct {
+	SequenceNumber          string `json:"device_sequence_number"`
+	EventKey                string `json:"device_event_key"`
+	ReceivedDate            string `json:"date_received"`
+	BrandName               string `json:"brand_name"`
+	GenericName             string `json:"generic_name"`
+	ProductCode             string `json:"device_report_product_code"`
+	ModelNumber             string `json:"model_number"`
+	CatalogNumber           string `json:"catalog_number"`
+	LotNumber               string `json:"lot_number"`
+	OtherIDNumber           string `json:"other_id_number"`
+	ExpirationDate          string `json:"expiration_date_of_device"`
+	Age                     string `json:"device_age_text"`
+	Availability            string `json:"device_availability"`
+	ReturnedDate            string `json:"date_returned_to_manufacturer"`
+	EvaluatedByManufacturer string `json:"device_evaluated_by_manufacturer"`
+	Operator                string `json:"device_operator"`
+	Implanted               string `json:"implant_flag"`
+	RemovedDate             string `json:"date_removed_flag"`
+	ManufacturerName        string `json:"manufacturer_d_name"`
+	ManufacturerAddress1    string `json:"manufacturer_d_address_1"`
+	ManufacturerAddress2    string `json:"manufacturer_d_address_2"`
+	ManufacturerCity        string `json:"manufacturer_d_city"`
+	ManufacturerState       string `json:"manufacturer_d_state"`
+	ManufacturerCountry     string `json:"manufacturer_d_country"`
+	ManufacturerZip         string `json:"manufacturer_d_zip_code"`
+	ManufacturerZipExt      string `json:"manufacturer_d_zip_code_ext"`
+	ManufacturerPostalCode  string `json:"manufacturer_d_postal_code"`
+}
+
 // An EnforcementReport contains information about an enforcement action
 // taken by the FDA
 type EnforcementReport struct {
