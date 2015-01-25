@@ -99,6 +99,27 @@ type Drug struct {
 	OpenFDA                    OpenFDA `json:"openfda"`
 }
 
-// OpenFDA reflects OpenFDA-enhanced fields
-// TODO(carbocation): Turn this into a proper struct instead of a map[string]interface{}
-type OpenFDA map[string]interface{}
+// OpenFDA reflects OpenFDA-enhanced fields. These are not guaranteed
+// to be present due to a variety of reasons (typos in the original
+// safety report, etc.)
+type OpenFDA struct {
+	ApplicationNumbers   []string `json:"application_number"`
+	BrandNames           []string `json:"brand_name"`
+	DosageForms          []string `json:"dosage_form"`
+	GenericNames         []string `json:"generic_name"`
+	ManufacturerNames    []string `json:"manufacturer_name"`
+	IsOriginalPackager   bool     `json:"is_original_packager"`
+	ProductNDCs          []string `json:"product_ndc"`
+	ProductTypes         []string `json:"product_type"`
+	Routes               []string `json:"route"`
+	SubstanceNames       []string `json:"substance_name"`
+	SPLIDs               []string `json:"spl_id"`
+	SPLSetIDs            []string `json:"spl_set_id"`
+	MechanismsOfAction   []string `json:"pharm_class_moa"`
+	ChemicalStructures   []string `json:"pharm_class_cs"`
+	PhysiologicEffects   []string `json:"pharm_class_pe"`
+	PharmacologicClasses []string `json:"pharm_class_epc"`
+	UPCs                 []string `json:"upc"`
+	UNIIs                []string `json:"unii"`
+	RXCUIs               []string `json:"rxcui"`
+}
