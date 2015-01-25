@@ -151,10 +151,10 @@ type EnforcementReport struct {
 	OpenFDA OpenFDA
 }
 
-// A SafetyReport is one report filed regarding one individual who is on
+// A DrugSafetyReport is one report filed regarding one individual who is on
 // one or more medications. Subjectively, while there are many fields in
-// each SafetyReport, often the majority of fields are left empty.
-type SafetyReport struct {
+// each DrugSafetyReport, often the majority of fields are left empty.
+type DrugSafetyReport struct {
 	ID                               string  `json:"safetyreportid"`
 	FulfillExpediteCriteria          string  `json:"fulfillexpeditecriteria"`
 	Version                          string  `json:"safetyreportversion"`

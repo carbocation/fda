@@ -6,10 +6,10 @@ type DrugService struct {
 }
 
 // EventSearch finds events that have been reported while a patient is on medications.
-// It yields a slice of SafetyReport, which is a structured response providing information
+// It yields a slice of DrugSafetyReport, which is a structured response providing information
 // about the event.
-func (s *DrugService) EventSearch(search string, limit, skip int) ([]SafetyReport, *Meta, error) {
-	data := []SafetyReport{}
+func (s *DrugService) EventSearch(search string, limit, skip int) ([]DrugSafetyReport, *Meta, error) {
+	data := []DrugSafetyReport{}
 
 	meta, err := s.client.search("/drug/event", search, limit, skip, &data)
 	return data, meta, err
