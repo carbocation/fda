@@ -108,7 +108,7 @@ type OpenFDA struct {
 	DosageForms          []string `json:"dosage_form"`
 	GenericNames         []string `json:"generic_name"`
 	ManufacturerNames    []string `json:"manufacturer_name"`
-	IsOriginalPackager   bool     `json:"is_original_packager"`
+	IsOriginalPackager   []bool   `json:"is_original_packager"`
 	ProductNDCs          []string `json:"product_ndc"`
 	ProductTypes         []string `json:"product_type"`
 	Routes               []string `json:"route"`
