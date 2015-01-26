@@ -154,6 +154,31 @@ func (c *Client) search(endpoint, search string, limit, skip int, data interface
 	return resp.Meta, nil
 }
 
+// search implements a generic count function. It is a convenience function to reduce code duplication
+// for generic search services.
+func (c *Client) count(endpoint, search, count string, limit int, data interface{}) (*Meta, error) {
+	params := url.Values{}
+	params.Add("limit", strconv.Itoa(limit))
+	if search != "" {
+		params.Add("search", search)
+	}
+	if count != "" {
+		params.Add("count", count)
+	}
+
+	req, err := c.NewRequest(endpoint, params, "")
+	if err != nil {
+		return &Meta{}, err
+	}
+
+	resp, err := c.Do(req, &data)
+	if err != nil {
+		return &Meta{}, fmt.Errorf("Search:err: %s", err)
+	}
+
+	return resp.Meta, nil
+}
+
 // Reponse resembles the data returned by the API
 type response struct {
 	HTTPResponse *http.Response

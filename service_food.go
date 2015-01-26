@@ -13,3 +13,10 @@ func (s *FoodService) EnforcementSearch(search string, limit, skip int) ([]Enfor
 	meta, err := s.client.search("/food/enforcement", search, limit, skip, &data)
 	return data, meta, err
 }
+
+// EnforcementCount counts food enforcement actions based on parameters you pass
+// It expects you to formulate the correct structure and pass it as *data to be modified.
+func (s *FoodService) EnforcementCount(search, count string, data interface{}, limit int) (*Meta, error) {
+	meta, err := s.client.count("/food/enforcement", search, count, limit, &data)
+	return meta, err
+}
