@@ -104,29 +104,56 @@ func (c *Client) NewRequest(endpoint string, params url.Values, body string) (*h
 // an API error has occurred.
 func (c *Client) Do(req *http.Request, v interface{}) (*response, error) {
 	resp, err := c.client.Do(req)
+	r := &response{HTTPResponse: resp}
 	if err != nil {
-		return nil, err
+		return r, err
 	}
 
 	defer resp.Body.Close()
 
 	err = checkResponse(resp)
 	if err != nil {
-		return nil, err
+		// Add rate limiting information, when available
+		if limit, err := strconv.Atoi(r.HTTPResponse.Header.Get(`X-RateLimit-Limit`)); err == nil {
+			if r.Meta == nil {
+				r.Meta = &Meta{}
+			}
+			r.Meta.RateLimiting.Limit = limit
+		}
+		if remaining, err := strconv.Atoi(r.HTTPResponse.Header.Get(`X-RateLimit-Remaining`)); err == nil {
+			if r.Meta == nil {
+				r.Meta = &Meta{}
+			}
+			r.Meta.RateLimiting.Remaining = remaining
+		}
+		return r, err
 	}
 
 	//For debugging
 	//buffer := &bytes.Buffer{}
 	//buffer.ReadFrom(resp.Body)
 	//fmt.Println(buffer.String())
-
-	r := &response{HTTPResponse: resp}
 	if v != nil {
 		// Our passed argument is now the value of r.Response
 		r.Results = v
 		// Decode the JSON into r.Data (which is our argument)
 		err = json.NewDecoder(resp.Body).Decode(r)
 	}
+
+	// Add rate limiting information, when available
+	if limit, err := strconv.Atoi(r.HTTPResponse.Header.Get(`X-RateLimit-Limit`)); err == nil {
+		if r.Meta == nil {
+			r.Meta = &Meta{}
+		}
+		r.Meta.RateLimiting.Limit = limit
+	}
+	if remaining, err := strconv.Atoi(r.HTTPResponse.Header.Get(`X-RateLimit-Remaining`)); err == nil {
+		if r.Meta == nil {
+			r.Meta = &Meta{}
+		}
+		r.Meta.RateLimiting.Remaining = remaining
+	}
+
 	return r, err
 }
 
@@ -148,7 +175,7 @@ func (c *Client) search(endpoint, search string, limit, skip int, data interface
 
 	resp, err := c.Do(req, &data)
 	if err != nil {
-		return &Meta{}, fmt.Errorf("Search:err: %s", err)
+		return resp.Meta, fmt.Errorf("search:err: %s", err)
 	}
 
 	return resp.Meta, nil
@@ -173,7 +200,7 @@ func (c *Client) count(endpoint, search, count string, limit int, data interface
 
 	resp, err := c.Do(req, &data)
 	if err != nil {
-		return &Meta{}, fmt.Errorf("Search:err: %s", err)
+		return resp.Meta, fmt.Errorf("count:err: %s", err)
 	}
 
 	return resp.Meta, nil
@@ -191,10 +218,14 @@ type response struct {
 // appear to be boilerplate, but the Pagination data will be useful
 // to assist in iterating over a dataset which contains greater than 100 items.
 type Meta struct {
-	Disclaimer  string
-	License     string
-	LastUpdated string     `json:"last_updated"`
-	Pagination  Pagination `json:"results"`
+	Disclaimer   string
+	License      string
+	LastUpdated  string     `json:"last_updated"`
+	Pagination   Pagination `json:"results"`
+	RateLimiting struct {
+		Limit     int
+		Remaining int
+	}
 }
 
 // Pagination contains information about the returned data, including how many
